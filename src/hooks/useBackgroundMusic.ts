@@ -27,10 +27,10 @@ function tone(
   osc.type = type;
   osc.frequency.value = freq;
   gain.gain.setValueAtTime(0, t);
-  gain.gain.linearRampToValueAtTime(vol, t + 0.018);
-  gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+  gain.gain.linearRampToValueAtTime(0, t + dur);
   osc.start(t);
-  osc.stop(t + dur + 0.02);
+  osc.stop(t + dur + 0.05);
 }
 
 function scheduleBar(ctx: AudioContext, dest: AudioNode, chord: number[], barStart: number) {
@@ -60,9 +60,9 @@ export function useBackgroundMusic(_src: string, masterVolume = 1.0) {
 
   const doSchedule = useCallback((ctx: AudioContext, dest: AudioNode) => {
     if (!activeRef.current) return;
-    if (ctx.state === "suspended") {
+    if (ctx.state !== "running") {
       ctx.resume().catch(() => {});
-      timerRef.current = setTimeout(() => doSchedule(ctx, dest), 200);
+      timerRef.current = setTimeout(() => doSchedule(ctx, dest), 300);
       return;
     }
     const now = ctx.currentTime;
@@ -100,8 +100,8 @@ export function useBackgroundMusic(_src: string, masterVolume = 1.0) {
     setIsPlaying(true);
     setHasStarted(true);
 
-    // Delay nhỏ để iOS kịp resume context sau silent buffer
-    setTimeout(() => doSchedule(ctx, gainRef.current!), 120);
+    // doSchedule tự retry nếu context chưa "running" — không setTimeout cứng
+    doSchedule(ctx, gainRef.current!);
   }, [masterVolume, doSchedule]);
 
   const toggle = useCallback(() => {

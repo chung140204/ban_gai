@@ -21,7 +21,7 @@ export function useSfx() {
       osc.frequency.setValueAtTime(900, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 0.08);
       gain.gain.setValueAtTime(volume, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.12);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.11);
     } else {
@@ -36,7 +36,7 @@ export function useSfx() {
         osc.frequency.setValueAtTime(freq, t);
         gain.gain.setValueAtTime(0, t);
         gain.gain.linearRampToValueAtTime(volume * 0.7, t + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+        gain.gain.linearRampToValueAtTime(0, t + 0.28);
         osc.start(t);
         osc.stop(t + 0.3);
       });
