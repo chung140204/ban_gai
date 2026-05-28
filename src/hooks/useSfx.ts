@@ -10,7 +10,12 @@ import { getAudioContext } from "@/lib/audioCtx";
 export function useSfx() {
   return useCallback((type: "pop" | "success", volume = 0.55) => {
     const ctx = getAudioContext();
-    if (!ctx || ctx.state !== "running") return;
+    if (!ctx) return;
+    // iOS 18 thêm state "interrupted" — thử resume rồi phát luôn
+    if (ctx.state !== "running") {
+      ctx.resume().catch(() => {});
+      return; // skip sound this time; next tap sẽ có tiếng
+    }
 
     if (type === "pop") {
       const osc  = ctx.createOscillator();
