@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-baloo), var(--font-quicksand), ui-sans-serif, sans-serif;
+
+  /* Pastel palette tokens */
+  --color-blush: #ffe3ee;
+  --color-petal: #ffc6dd;
+  --color-rosey: #ff8fb8;
+  --color-candy: #ff5e9a;
+  --color-cream: #fff5fa;
+  --color-lavender: #efe1ff;
+  --color-sky: #dcefff;
+
+  /* Animations */
+  --animate-gradient: gradient 18s ease infinite;
+  --animate-float-slow: floatUp 9s linear infinite;
+  --animate-wiggle: wiggle 1.2s ease-in-out infinite;
+  --animate-pulse-soft: pulseSoft 2.4s ease-in-out infinite;
+  --animate-sparkle: sparkle 2.8s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--heart-opacity, 0.8); }
+  90% { opacity: var(--heart-opacity, 0.8); }
+  100% { transform: translateY(-110vh) rotate(var(--heart-spin, 40deg)); opacity: 0; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #5b2b45;
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, #ffe3ee 0%, #fff0f7 30%, #ffe9f4 55%, #efe1ff 100%);
+  background-size: 220% 220%;
+  animation: var(--animate-gradient);
+  overflow-x: hidden;
+  /* Đẩy nội dung ra khỏi vùng notch / home indicator trên iPhone */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Tiện ích safe-area dùng trong className Tailwind */
+.pb-safe { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+.pt-safe { padding-top: max(0.5rem, env(safe-area-inset-top)); }
+
+/* Hide scrollbars on the playful flow but keep scrollability */
+body::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
