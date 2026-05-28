@@ -1,23 +1,38 @@
 "use client";
 
 /**
- * Singleton AudioContext dùng chung cho nhạc nền và SFX.
- * iOS yêu cầu resume() được gọi trong gesture handler —
- * dùng chung 1 context để chỉ cần unlock 1 lần duy nhất.
+ * Singleton AudioContext + iOS unlock.
+ *
+ * iOS Safari yêu cầu:
+ *  1. new AudioContext() gọi ĐỒNG BỘ trong gesture handler
+ *  2. Phát 1 silent buffer ngay lập tức để thực sự mở khóa
+ *  3. KHÔNG dùng async/await — phá vỡ gesture chain trên iOS
  */
 
-let sharedCtx: AudioContext | null = null;
+let ctx: AudioContext | null = null;
 
-export function getAudioContext(): AudioContext | null {
+export function unlockAudio(): AudioContext | null {
   if (typeof window === "undefined") return null;
-  if (!sharedCtx) sharedCtx = new AudioContext();
-  return sharedCtx;
+
+  if (!ctx) ctx = new AudioContext();
+
+  // resume() đồng bộ (fire and forget) — không await
+  if (ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
+  }
+
+  // Silent buffer trick — cách DUY NHẤT đáng tin để unlock iOS WebAudio
+  try {
+    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+  } catch {}
+
+  return ctx;
 }
 
-/** Gọi trong gesture handler để unlock cho iOS */
-export async function ensureAudioReady(): Promise<AudioContext | null> {
-  const ctx = getAudioContext();
-  if (!ctx) return null;
-  if (ctx.state === "suspended") await ctx.resume();
+export function getAudioContext(): AudioContext | null {
   return ctx;
 }

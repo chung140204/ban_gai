@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ensureAudioReady, getAudioContext } from "@/lib/audioCtx";
+import { getAudioContext, unlockAudio } from "@/lib/audioCtx";
 
 const BPM = 72;
 const BEAT = 60 / BPM;
 const BAR  = BEAT * 4;
-const LOOK_AHEAD = 0.15;
 
 const PROGRESSION: number[][] = [
   [130.81, 261.63, 329.63, 392.00, 523.25],
@@ -46,11 +45,10 @@ function scheduleBar(ctx: AudioContext, dest: AudioNode, chord: number[], barSta
 }
 
 export function useBackgroundMusic(_src: string, masterVolume = 1.0) {
-  const gainRef      = useRef<GainNode | null>(null);
-  const compRef      = useRef<AudioNode | null>(null);
-  const timerRef     = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const nextRef      = useRef<number>(0);
-  const playingRef   = useRef(false);
+  const gainRef    = useRef<GainNode | null>(null);
+  const timerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const nextRef    = useRef<number>(0);
+  const activeRef  = useRef(false);
 
   const [isPlaying,  setIsPlaying]  = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -60,93 +58,83 @@ export function useBackgroundMusic(_src: string, masterVolume = 1.0) {
     timerRef.current = null;
   };
 
-  const scheduleLoop = useCallback((ctx: AudioContext, dest: AudioNode) => {
-    // iOS: nếu context bị suspend (mất focus), tự resume rồi reschedule
+  const doSchedule = useCallback((ctx: AudioContext, dest: AudioNode) => {
+    if (!activeRef.current) return;
     if (ctx.state === "suspended") {
-      void ctx.resume().then(() => {
-        if (playingRef.current) scheduleLoop(ctx, dest);
-      });
+      ctx.resume().catch(() => {});
+      timerRef.current = setTimeout(() => doSchedule(ctx, dest), 200);
       return;
     }
-
     const now = ctx.currentTime;
-    if (nextRef.current < now + LOOK_AHEAD) nextRef.current = now + 0.05;
-
+    if (nextRef.current < now + 0.15) nextRef.current = now + 0.05;
     const loopStart = nextRef.current;
     PROGRESSION.forEach((chord, i) => scheduleBar(ctx, dest, chord, loopStart + i * BAR));
     nextRef.current += LOOP_DUR;
-
     const waitMs = Math.max(100, (nextRef.current - ctx.currentTime - 0.8) * 1000);
-    timerRef.current = setTimeout(() => {
-      if (playingRef.current) scheduleLoop(ctx, dest);
-    }, waitMs);
+    timerRef.current = setTimeout(() => doSchedule(ctx, dest), waitMs);
   }, []);
 
-  const start = useCallback(async () => {
+  const start = useCallback(() => {
     if (typeof window === "undefined") return;
-    try {
-      // Dùng shared context — đã unlock bởi gesture này
-      const ctx = await ensureAudioReady();
-      if (!ctx) { setHasStarted(true); return; }
 
-      if (!compRef.current) {
-        const comp = ctx.createDynamicsCompressor();
-        comp.threshold.value = -12;
-        comp.knee.value      = 6;
-        comp.ratio.value     = 4;
-        comp.attack.value    = 0.003;
-        comp.release.value   = 0.25;
-        comp.connect(ctx.destination);
-        compRef.current = comp;
+    // ĐỒNG BỘ — không async/await — iOS yêu cầu điều này
+    const ctx = unlockAudio();
+    if (!ctx) { setHasStarted(true); return; }
 
-        const gain = ctx.createGain();
-        gain.gain.value = masterVolume;
-        gain.connect(comp);
-        gainRef.current = gain;
-      }
+    if (!gainRef.current) {
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -12;
+      comp.knee.value = 6;
+      comp.ratio.value = 4;
+      comp.attack.value = 0.003;
+      comp.release.value = 0.25;
+      comp.connect(ctx.destination);
 
-      playingRef.current = true;
-      scheduleLoop(ctx, gainRef.current!);
-      setIsPlaying(true);
-      setHasStarted(true);
-    } catch {
-      setHasStarted(true);
+      const gain = ctx.createGain();
+      gain.gain.value = masterVolume;
+      gain.connect(comp);
+      gainRef.current = gain;
     }
-  }, [masterVolume, scheduleLoop]);
 
-  const toggle = useCallback(async () => {
+    activeRef.current = true;
+    setIsPlaying(true);
+    setHasStarted(true);
+
+    // Delay nhỏ để iOS kịp resume context sau silent buffer
+    setTimeout(() => doSchedule(ctx, gainRef.current!), 120);
+  }, [masterVolume, doSchedule]);
+
+  const toggle = useCallback(() => {
     const gain = gainRef.current;
     const ctx  = getAudioContext();
     if (!gain || !ctx) return;
 
     if (isPlaying) {
       gain.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
-      playingRef.current = false;
+      activeRef.current = false;
+      clearTimer();
       setIsPlaying(false);
     } else {
-      // iOS: resume lại nếu bị suspend khi tắt tiếng
-      if (ctx.state === "suspended") await ctx.resume();
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
       gain.gain.setTargetAtTime(masterVolume, ctx.currentTime, 0.25);
-      playingRef.current = true;
-      // Restart scheduling nếu timer đã dừng
-      scheduleLoop(ctx, gain);
+      activeRef.current = true;
+      doSchedule(ctx, gain);
       setIsPlaying(true);
     }
-  }, [isPlaying, masterVolume, scheduleLoop]);
+  }, [isPlaying, masterVolume, doSchedule]);
 
-  // Tự resume khi tab/app được active lại (iOS suspend khi mất focus)
   useEffect(() => {
-    const handleVisible = () => {
+    const onVisible = () => {
       const ctx = getAudioContext();
-      if (ctx && ctx.state === "suspended" && playingRef.current) {
-        void ctx.resume();
+      if (ctx && ctx.state === "suspended" && activeRef.current) {
+        ctx.resume().catch(() => {});
       }
     };
-    document.addEventListener("visibilitychange", handleVisible);
-    return () => document.removeEventListener("visibilitychange", handleVisible);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
-  useEffect(() => () => { clearTimer(); }, []);
+  useEffect(() => () => clearTimer(), []);
 
   return { isPlaying, hasStarted, start, toggle };
 }

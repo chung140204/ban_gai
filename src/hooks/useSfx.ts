@@ -1,23 +1,22 @@
 "use client";
 
 import { useCallback } from "react";
-import { ensureAudioReady } from "@/lib/audioCtx";
+import { getAudioContext } from "@/lib/audioCtx";
 
 /**
- * Phát hiệu ứng âm thanh bằng Web Audio API.
- * Dùng chung AudioContext với nhạc nền — iOS chỉ cần unlock 1 lần.
+ * Phát SFX đồng bộ — không async/await, tương thích iOS Safari.
+ * AudioContext đã được unlock bởi unlockAudio() khi user bấm nút đầu tiên.
  */
 export function useSfx() {
-  return useCallback(async (type: "pop" | "success", volume = 0.55) => {
-    const ctx = await ensureAudioReady();
-    if (!ctx) return;
+  return useCallback((type: "pop" | "success", volume = 0.55) => {
+    const ctx = getAudioContext();
+    if (!ctx || ctx.state !== "running") return;
 
     if (type === "pop") {
       const osc  = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.type = "sine";
       osc.frequency.setValueAtTime(900, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 0.08);
@@ -32,7 +31,6 @@ export function useSfx() {
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
-
         const t = ctx.currentTime + i * 0.11;
         osc.type = "triangle";
         osc.frequency.setValueAtTime(freq, t);
