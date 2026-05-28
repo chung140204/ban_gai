@@ -16,6 +16,8 @@ export const assets = {
     ask:      "https://media.giphy.com/media/L3iXjPw1GoEk0nioqY/giphy.gif",
     /** DateTime — cặp đôi Milk & Mocha nảy lên cùng trái tim */
     datetime: "https://media.giphy.com/media/JoUoAzZEjEy9PrZ98N/giphy.gif",
+    /** Location — cặp đôi vui vẻ rủ nhau đi chơi */
+    location: "https://media.giphy.com/media/dZd6NaZ8522fBx6w3d/giphy.gif",
     /** Confirm — cặp đôi tình tứ bên nhau */
     confirm:  "https://media.giphy.com/media/qAGW5seF4FIVVV97dI/giphy.gif",
     /** Success — cặp gấu ôm nhau, trái tim bay — màn ăn mừng quan trọng nhất */

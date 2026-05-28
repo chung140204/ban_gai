@@ -1,4 +1,4 @@
-import type { TimeSlot } from "@/lib/types";
+import type { LocationPreset, TimeSlot } from "@/lib/types";
 
 /**
  * Toàn bộ nội dung hiển thị nằm ở đây — sửa 1 chỗ là đổi cả web.
@@ -60,6 +60,68 @@ export const content = {
       { id: "evening",   label: "Buổi tối",   emoji: "🌙", hours: [18,19,20,21,22] },
     ] satisfies TimeSlot[],
     hourLabel: "Chọn giờ cụ thể ⏰",
+  },
+
+  location: {
+    title: "Mình đi đâu nào? 🗺️",
+    subtitle: "Chọn địa điểm cho buổi hẹn của tụi mình nha!",
+    presets: [
+      { id: "cafe",       label: "Cafe",        emoji: "☕" },
+      { id: "park",       label: "Công viên",   emoji: "🌳" },
+      { id: "cinema",     label: "Xem phim",    emoji: "🎬" },
+      { id: "restaurant", label: "Nhà hàng",    emoji: "🍽️" },
+      { id: "bubbletea",  label: "Trà sữa",     emoji: "🧋" },
+      { id: "shopping",   label: "Shopping",    emoji: "🛍️" },
+      { id: "dessert",    label: "Ăn bánh ngọt", emoji: "🍰" },
+      { id: "beach",      label: "Biển / Hồ",   emoji: "🏖️" },
+    ] satisfies LocationPreset[],
+    customPlaceholder: "Hoặc gõ địa điểm khác...",
+    foodTitle: "Ăn gì nào? 🎲",
+    foodSpin: "Random đồ ăn!",
+    foods: [
+      // Món Việt
+      "Bún bò Huế 🍜", "Phở bò tái nạm 🍜", "Bún riêu cua 🦀",
+      "Bún chả Hà Nội 🥩", "Cơm tấm sườn bì chả 🍖", "Mì quảng 🍝",
+      "Bánh mì thịt nguội 🥖", "Bánh xèo giòn 🥞", "Cháo lòng huyết 🍲",
+      "Gỏi cuốn tôm thịt 🌯", "Bánh tráng trộn 🥗", "Hủ tiếu Nam Vang 🍜",
+      "Lẩu thái hải sản 🫕", "Lẩu mắm miền Tây 🫕", "Cơm niêu cá kho 🍚",
+      "Bánh căn Đà Lạt 🫔", "Bánh khọt vũng tàu 🥮", "Bún mắm 🍜",
+      "Cơm chiên dương châu 🍳", "Súp cua bắp 🥣",
+      // Món châu Á
+      "Sushi Nhật 🍱", "Ramen Nhật 🍜", "Takoyaki 🐙",
+      "Dimsum Quảng Đông 🥟", "Cơm gà Hải Nam 🍚", "Pad Thai Thái 🍜",
+      "Tokbokki Hàn Quốc 🌶️", "Topokki phô mai 🧀", "Gà chiên Hàn 🍗",
+      "Lẩu Thái mookata 🔥", "Bingsu đỏ Hàn 🍧",
+      // Đồ ăn nhanh & Tây
+      "Burger double cheese 🍔", "Pizza pepperoni 🍕", "Gà rán KFC 🍗",
+      "Hotdog New York 🌭", "Mì Ý sốt bò 🍝", "Steak bò Mỹ 🥩",
+      // Đồ ngọt & tráng miệng
+      "Kem tươi Ý gelato 🍦", "Bánh crepe Nhật 🥞", "Chè bưởi thạch 🍮",
+      "Chè 3 màu dừa 🥥", "Bánh tiramisu 🍰", "Waffle khoai tây 🧇",
+      "Kem cuộn Thái 🍦", "Bánh mochi Nhật 🍡", "Trà sữa trân châu 🧋",
+      // Ăn vặt
+      "Khoai lang nướng 🍠", "Ngô rang bơ 🌽", "Xiên que sa tế 🍢",
+      "Bánh tráng nướng đà lạt 🫓", "Bò viên lắc 🥩",
+    ],
+    activityTitle: "Làm gì nào? 🎲",
+    activitySpin: "Random hoạt động!",
+    activities: [
+      "Chụp ảnh cùng nhau 📸",
+      "Ngồi tám chuyện 💬",
+      "Xem phim chiếu rạp 🎬",
+      "Đi dạo bờ hồ 🚶",
+      "Chơi bowling 🎳",
+      "Uống cà phê ngắm mưa ☔",
+      "Đi siêu thị cùng 🛒",
+      "Chơi game arcade 🕹️",
+      "Karaoke 🎤",
+      "Xem triển lãm 🎨",
+      "Đạp xe công viên 🚲",
+      "Làm bánh cùng nhau 🧁",
+      "Đọc sách cùng 📚",
+    ],
+    continueLabel: "Chốt địa điểm! 📍",
+    skipLabel: "Để sau tính 😊",
   },
 
   confirm: {

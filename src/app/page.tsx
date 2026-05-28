@@ -10,6 +10,7 @@ import { MusicToggle } from "@/components/ui/MusicToggle";
 import { IntroScreen } from "@/components/screens/IntroScreen";
 import { AskScreen } from "@/components/screens/AskScreen";
 import { DateTimeScreen } from "@/components/screens/DateTimeScreen";
+import { LocationScreen } from "@/components/screens/LocationScreen";
 import { ConfirmScreen } from "@/components/screens/ConfirmScreen";
 import { SuccessScreen } from "@/components/screens/SuccessScreen";
 
@@ -23,10 +24,18 @@ export default function Home() {
     setStep("ask");
   }, [music]);
 
-  const handlePick = useCallback((picked: DateSelection) => {
+  const handlePickDateTime = useCallback((picked: DateSelection) => {
     setSelection(picked);
-    setStep("confirm");
+    setStep("location");
   }, []);
+
+  const handlePickLocation = useCallback(
+    (result: { location: string; food?: string; activity?: string }) => {
+      setSelection((prev) => prev ? { ...prev, ...result } : prev);
+      setStep("confirm");
+    },
+    [],
+  );
 
   const handleRestart = useCallback(() => {
     setSelection(null);
@@ -49,7 +58,15 @@ export default function Home() {
         )}
 
         {step === "datetime" && (
-          <DateTimeScreen key="datetime" onPick={handlePick} />
+          <DateTimeScreen key="datetime" onPick={handlePickDateTime} />
+        )}
+
+        {step === "location" && selection && (
+          <LocationScreen
+            key="location"
+            onPick={handlePickLocation}
+            onSkip={() => setStep("confirm")}
+          />
         )}
 
         {step === "confirm" && selection && (
@@ -57,7 +74,7 @@ export default function Home() {
             key="confirm"
             selection={selection}
             onConfirm={() => setStep("success")}
-            onChange={() => setStep("datetime")}
+            onChange={() => setStep("location")}
           />
         )}
 

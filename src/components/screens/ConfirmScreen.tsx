@@ -17,10 +17,12 @@ async function sendTelegramNotify(selection: DateSelection) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        date: formatVietnameseDate(selection.date),
-        slot: `${selection.slot.emoji} ${selection.slot.label}`,
-        hour: selection.hour,
-        time: formatHour(selection.hour),
+        date:     formatVietnameseDate(selection.date),
+        slot:     `${selection.slot.emoji} ${selection.slot.label}`,
+        time:     formatHour(selection.hour),
+        location: selection.location,
+        food:     selection.food,
+        activity: selection.activity,
       }),
     });
   } catch {
@@ -66,15 +68,31 @@ export function ConfirmScreen({
           {content.confirm.title}
         </h2>
 
-        <div className="mt-4 rounded-3xl border border-white/60 bg-white/55 p-5 shadow-inner">
-          <p className="text-sm text-rose-400/80">{content.confirm.intro}</p>
-          <p className="mt-1 font-display text-xl font-extrabold text-rose-500">
-            {formatVietnameseDate(date)}
-          </p>
-          <p className="mt-2 text-sm text-rose-400/80">{content.confirm.atWord}</p>
-          <p className="mt-1 font-display text-lg font-bold text-rose-500">
-            {slot.emoji} {slot.label} · {formatHour(hour)}
-          </p>
+        <div className="mt-4 space-y-1 rounded-3xl border border-white/60 bg-white/55 p-5 shadow-inner text-left">
+          <p className="text-xs font-semibold uppercase tracking-wide text-rose-400/60">📅 Ngày</p>
+          <p className="font-display text-lg font-extrabold text-rose-500">{formatVietnameseDate(date)}</p>
+
+          <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-400/60">🕐 Giờ</p>
+          <p className="font-bold text-rose-500">{slot.emoji} {slot.label} · {formatHour(hour)}</p>
+
+          {selection.location && (
+            <>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-400/60">📍 Địa điểm</p>
+              <p className="font-bold text-rose-500">{selection.location}</p>
+            </>
+          )}
+          {selection.food && (
+            <>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-400/60">🍽️ Đồ ăn</p>
+              <p className="font-bold text-rose-500">{selection.food}</p>
+            </>
+          )}
+          {selection.activity && (
+            <>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-400/60">🎉 Hoạt động</p>
+              <p className="font-bold text-rose-500">{selection.activity}</p>
+            </>
+          )}
         </div>
 
         <p className="mt-3 text-sm text-rose-400/90">{content.confirm.closing}</p>

@@ -12,18 +12,24 @@ export async function POST(req: NextRequest) {
   const body = await req.json() as {
     date: string;
     slot: string;
-    hour: number;
     time: string;
+    location?: string;
+    food?: string;
+    activity?: string;
   };
 
-  const text = [
+  const lines = [
     "💌 *Có người chốt hẹn rồi!*",
     "",
     `📅 *Ngày:* ${body.date}`,
     `🕐 *Giờ:* ${body.slot} · ${body.time}`,
-    "",
-    "Nhanh lên chuẩn bị nhé! 🐻💕",
-  ].join("\n");
+  ];
+  if (body.location) lines.push(`📍 *Địa điểm:* ${body.location}`);
+  if (body.food)     lines.push(`🍽️ *Đồ ăn:* ${body.food}`);
+  if (body.activity) lines.push(`🎉 *Hoạt động:* ${body.activity}`);
+  lines.push("", "Nhanh lên chuẩn bị nhé! 🐻💕");
+
+  const text = lines.join("\n");
 
   try {
     const res = await fetch(

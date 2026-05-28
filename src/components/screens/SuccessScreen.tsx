@@ -45,16 +45,17 @@ export function SuccessScreen({
           {content.success.message}
         </p>
 
-        <div className="mt-4 rounded-3xl border border-white/60 bg-white/55 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-rose-400/70">
+        <div className="mt-4 rounded-3xl border border-white/60 bg-white/55 p-4 text-left">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-rose-400/70">
             {content.success.summaryPrefix}
           </p>
-          <p className="mt-1 font-display text-lg font-bold text-rose-500">
-            {formatVietnameseDate(selection.date)}
-          </p>
-          <p className="text-sm font-semibold text-rose-400">
-            {selection.slot.emoji} {selection.slot.label} · {formatHour(selection.hour)}
-          </p>
+          <div className="space-y-1 text-sm font-semibold text-rose-500">
+            <p>📅 {formatVietnameseDate(selection.date)}</p>
+            <p>🕐 {selection.slot.emoji} {selection.slot.label} · {formatHour(selection.hour)}</p>
+            {selection.location && <p>📍 {selection.location}</p>}
+            {selection.food     && <p>🍽️ {selection.food}</p>}
+            {selection.activity && <p>🎉 {selection.activity}</p>}
+          </div>
         </div>
 
         {/* Hàng emoji vui bổ sung */}
