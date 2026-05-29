@@ -79,46 +79,66 @@ export const content = {
     foodTitle: "Ăn gì nào? 🎲",
     foodSpin: "Random đồ ăn!",
     foods: [
-      // Món Việt
-      "Bún bò Huế 🍜", "Phở bò tái nạm 🍜", "Bún riêu cua 🦀",
-      "Bún chả Hà Nội 🥩", "Cơm tấm sườn bì chả 🍖", "Mì quảng 🍝",
-      "Bánh mì thịt nguội 🥖", "Bánh xèo giòn 🥞", "Cháo lòng huyết 🍲",
-      "Gỏi cuốn tôm thịt 🌯", "Bánh tráng trộn 🥗", "Hủ tiếu Nam Vang 🍜",
-      "Lẩu thái hải sản 🫕", "Lẩu mắm miền Tây 🫕", "Cơm niêu cá kho 🍚",
-      "Bánh căn Đà Lạt 🫔", "Bánh khọt vũng tàu 🥮", "Bún mắm 🍜",
-      "Cơm chiên dương châu 🍳", "Súp cua bắp 🥣",
-      // Món châu Á
-      "Sushi Nhật 🍱", "Ramen Nhật 🍜", "Takoyaki 🐙",
-      "Dimsum Quảng Đông 🥟", "Cơm gà Hải Nam 🍚", "Pad Thai Thái 🍜",
-      "Tokbokki Hàn Quốc 🌶️", "Topokki phô mai 🧀", "Gà chiên Hàn 🍗",
-      "Lẩu Thái mookata 🔥", "Bingsu đỏ Hàn 🍧",
-      // Đồ ăn nhanh & Tây
-      "Burger double cheese 🍔", "Pizza pepperoni 🍕", "Gà rán KFC 🍗",
-      "Hotdog New York 🌭", "Mì Ý sốt bò 🍝", "Steak bò Mỹ 🥩",
-      // Đồ ngọt & tráng miệng
-      "Kem tươi Ý gelato 🍦", "Bánh crepe Nhật 🥞", "Chè bưởi thạch 🍮",
-      "Chè 3 màu dừa 🥥", "Bánh tiramisu 🍰", "Waffle khoai tây 🧇",
-      "Kem cuộn Thái 🍦", "Bánh mochi Nhật 🍡", "Trà sữa trân châu 🧋",
-      // Ăn vặt
-      "Khoai lang nướng 🍠", "Ngô rang bơ 🌽", "Xiên que sa tế 🍢",
-      "Bánh tráng nướng đà lạt 🫓", "Bò viên lắc 🥩",
+      // Phở & Bún
+      "Phở bò 🍜", "Phở gà 🍜", "Bún bò Huế 🍜",
+      "Bún chả 🥩", "Bún riêu 🦀", "Hủ tiếu 🍜",
+      // Cơm
+      "Cơm tấm 🍖", "Cơm niêu 🍚", "Cơm gà 🍗",
+      "Cơm sườn 🍖", "Cơm phần gia đình 🍱",
+      // Bánh & cuốn
+      "Bánh mì 🥖", "Bánh xèo 🥞", "Bánh cuốn 🫔",
+      "Bánh tráng cuốn thịt heo 🌯", "Gỏi cuốn 🌯",
+      "Nem rán 🥟", "Nem lụi 🍢", "Nem nướng 🍢", "Chả cá 🐟",
+      // Món bò
+      "Bò kho 🍲", "Bò né 🥩", "Bò bít tết 🥩",
+      // Món gà & vịt
+      "Gà nướng 🍗", "Gà rán 🍗", "Vịt quay 🦆",
+      // Món truyền thống
+      "Cá kho tộ 🐟", "Canh chua 🥣", "Thịt kho tàu 🍖",
+      "Rau muống xào tỏi 🥬",
+      // Lẩu
+      "Lẩu thái 🫕", "Lẩu gà lá é 🫕", "Lẩu bò 🫕",
+      "Lẩu hải sản 🦐", "Lẩu riêu cua bắp bò 🦀",
+      // Nướng
+      "Thịt nướng 🔥", "Thịt xiên nướng 🍢", "Bò nướng 🥩",
+      "Sườn nướng 🍖", "Hải sản nướng 🦞",
+      // Buffet
+      "Buffet nướng 🔥", "Buffet lẩu 🫕",
+      // Ốc & chân gà
+      "Ốc luộc 🐚", "Ốc xào me 🐚",
+      "Chân gà nướng 🍗", "Chân gà sốt Thái 🌶️",
+      // Món khác
+      "Pizza 🍕", "Mì cay 🌶️", "Tokbokki 🌶️", "Sushi 🍱", "Dimsum 🥟",
     ],
     activityTitle: "Làm gì nào? 🎲",
     activitySpin: "Random hoạt động!",
     activities: [
-      "Chụp ảnh cùng nhau 📸",
-      "Ngồi tám chuyện 💬",
+      // Lãng mạn & gắn kết
+      "Chụp ảnh couple cùng nhau 📸",
+      "Ngắm hoàng hôn cùng nhau 🌅",
+      "Đi dạo bờ hồ nắm tay 🚶‍♀️",
+      "Picnic công viên 🧺",
+      "Ngắm sao buổi tối ✨",
+      "Thả đèn hoa đăng 🏮",
+      // Trải nghiệm cùng nhau
       "Xem phim chiếu rạp 🎬",
-      "Đi dạo bờ hồ 🚶",
-      "Chơi bowling 🎳",
-      "Uống cà phê ngắm mưa ☔",
-      "Đi siêu thị cùng 🛒",
-      "Chơi game arcade 🕹️",
-      "Karaoke 🎤",
-      "Xem triển lãm 🎨",
-      "Đạp xe công viên 🚲",
+      "Karaoke hát đôi 🎤",
       "Làm bánh cùng nhau 🧁",
-      "Đọc sách cùng 📚",
+      "Cùng nhau nấu ăn 🍳",
+      "Vẽ tranh / gốm cùng nhau 🎨",
+      "Xem triển lãm nghệ thuật 🖼️",
+      // Vui chơi năng động
+      "Chơi bowling 🎳",
+      "Chơi game arcade 🕹️",
+      "Đạp xe đôi quanh phố 🚲",
+      "Trượt patin cùng nhau ⛸️",
+      "Chèo SUP / đạp vịt 🚣",
+      // Nhẹ nhàng thư giãn
+      "Uống cà phê ngắm mưa ☕",
+      "Ngồi tám chuyện tâm sự 💬",
+      "Đọc sách chung một góc 📚",
+      "Đi nhà sách chọn quà 🎁",
+      "Cùng nhau đi chợ đêm 🏮",
     ],
     continueLabel: "Chốt địa điểm! 📍",
     skipLabel: "Để sau tính 😊",
